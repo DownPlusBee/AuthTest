@@ -12,6 +12,8 @@ internal static class HostingExtensions
         builder.Services.AddIdentityServer(options =>
             {
                 // https://docs.duendesoftware.com/identityserver/v6/fundamentals/resources/api_scopes#authorization-based-on-scopes
+
+                // This ensures a specific claime (the audience claim) will be included in tokens by default.
                 options.EmitStaticAudienceClaim = true;
             })
             .AddInMemoryIdentityResources(Config.IdentityResources)
@@ -23,9 +25,9 @@ internal static class HostingExtensions
     
     public static WebApplication ConfigurePipeline(this WebApplication app)
     { 
-        app.UseSerilogRequestLogging();
+        app.UseSerilogRequestLogging(); // logging middleware
     
-        if (app.Environment.IsDevelopment())
+        if (app.Environment.IsDevelopment()) // developement error messages
         {
             app.UseDeveloperExceptionPage();
         }

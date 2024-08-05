@@ -18,6 +18,8 @@ try
 
     var app = builder
         .ConfigureServices()
+
+        // Configures the HTTP client pipeline.
         .ConfigurePipeline();
     
     app.Run();
