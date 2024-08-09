@@ -3,7 +3,7 @@ using Serilog;
 namespace FakePing.IDP;
 
 internal static class HostingExtensions
-{ij
+{
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
         builder.Services.AddRazorPages();
