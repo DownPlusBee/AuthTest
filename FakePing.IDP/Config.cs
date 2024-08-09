@@ -27,29 +27,37 @@ public static class Config
     public static IEnumerable<Client> Clients =>
         // For each application, you will need to define at least one client.
         new Client[]
-            { 
+            {
                 new Client()
-                { 
+                {
                     ClientName = "Image Gallery",
                     ClientId = "imagegalleryclient",
                     AllowedGrantTypes = GrantTypes.Code, // sets the allowed grant type to authorization code flow. This code is deliverted to the browser via URI redirection.
                     RedirectUris = // No way, here's that URI rediction.
-                    { 
+                    {
                         "https://localhost:7184/signin-oidc" // This is the host address of the client. The signin-oidc is Identity Servers default value, but it can be configured to a diff value in the web client.
+                    },
+
+                    // Location to redirect to after client logs out and cookie in the IDP has been cleared.
+                    PostLogoutRedirectUris =
+                    { 
+                        "https://localhost:7184/signout-callback-oidc" // matches the default route of the web client.
                     },
 
                     // A client can only use scopes that have been defined as an identity resource above.
                     AllowedScopes =
-                    { 
+                    {
                         IdentityServerConstants.StandardScopes.OpenId, // Returns identity scopes.
                         IdentityServerConstants.StandardScopes.Profile // Returns profile scopes (ie familya names)
                     },
 
                     // This is for client authentication. This allows the client application to execute an authenticate call to the token endpoint.
                     ClientSecrets =
-                    { 
+                    {
                         new Secret("secret".Sha256())
-                    }
+                    },
+                     RequireConsent = true
+
                 }
             };
 }

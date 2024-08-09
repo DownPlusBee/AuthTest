@@ -25,6 +25,8 @@ namespace ImageGallery.Client.Controllers
 
         public async Task<IActionResult> Index()
         {
+            await LogIdentityInformation();
+
             var httpClient = _httpClientFactory.CreateClient("APIClient");
 
             var request = new HttpRequestMessage(
