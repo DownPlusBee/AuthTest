@@ -1,7 +1,10 @@
 ﻿using ImageGallery.Client.ViewModels;
 using ImageGallery.Model;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc; 
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using System.Text;
 using System.Text.Json;
 
 namespace ImageGallery.Client.Controllers
@@ -176,6 +179,21 @@ namespace ImageGallery.Client.Controllers
             response.EnsureSuccessStatusCode();
 
             return RedirectToAction("Index");
+        }
+
+        public async Task LogIdentityInformation()
+        {
+            // get the saved identity token.
+            var identityToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.IdToken); // access the saved token. The middleware by default stores the token stores inside the properties section of the application cookie. 
+
+            var userClaimsStringBuilder = new StringBuilder();
+
+            foreach (var claim in User.Claims) // User claims are contained in the user object which is exposed by the controller base.
+            {
+                userClaimsStringBuilder.AppendLine($"Claim type: {claim.Type} - Claim value: {claim.Value}");
+            }
+
+            _logger.LogInformation($"Identity token and user claims" + $"\n{identityToken} \n{userClaimsStringBuilder}");
         }
     }
 }
