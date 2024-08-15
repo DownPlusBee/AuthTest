@@ -39,6 +39,7 @@ builder.Services.AddAuthentication(options =>
     // To change:
     // options.SignedOutCallbackPath = "whateverstringyouwant";
     options.SaveTokens = true; // Allows middleware to save tokens from the IDP so they can be used inside the client.
+    options.GetClaimsFromUserInfoEndpoint = true; // Allows us to get additional claims from the UserInfoendpoint.
 
 });
 
