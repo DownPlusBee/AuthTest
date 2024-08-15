@@ -129,6 +129,7 @@ namespace ImageGallery.Client.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "Hoovernator")]
         public IActionResult AddImage()
         {
             return View();

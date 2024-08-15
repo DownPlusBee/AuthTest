@@ -25,8 +25,13 @@ builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-}).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme) // Congigures the cookie handler. Once an identity token is validate and transformed into a claims identity, it will be stored in a cookie.
-                                                                // The cookie is used on subsequent requests to the web app to check whether or not we are making an authenticated request. 
+}).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+{
+    options.AccessDeniedPath = "/Authentication/AccessDenied";
+}) 
+
+// Congigures the cookie handler. Once an identity token is validate and transformed into a claims identity, it will be stored in a cookie.
+// The cookie is used on subsequent requests to the web app to check whether or not we are making an authenticated request. 
 .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
 {
     options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme; // this registers and configures the OIDC handler. This handles create auth/token/idenity token validation requestions.
