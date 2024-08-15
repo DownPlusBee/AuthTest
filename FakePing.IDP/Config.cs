@@ -14,7 +14,8 @@ public static class Config
             // Other resources that could be mapped could be things like first name, last name, etc.
             // This is the openid scope, and it must be used for user scopes
             new IdentityResources.OpenId(),
-            new IdentityResources.Profile() // will return the given name and family name claims will be returned. This enables accross the entire applicaiton
+            new IdentityResources.Profile(), // will return the given name and family name claims will be returned. This enables accross the entire applicaiton
+            new IdentityResource("roles", "Your roles", ["role"]) // Define new scope for role claims. Still need to explicity allow this scopes in allowedscopes
         };
 
     public static IEnumerable<ApiScope> ApiScopes =>
@@ -40,7 +41,7 @@ public static class Config
 
                     // Location to redirect to after client logs out and cookie in the IDP has been cleared.
                     PostLogoutRedirectUris =
-                    { 
+                    {
                         "https://localhost:7184/signout-callback-oidc" // matches the default route of the web client.
                     },
 
@@ -48,7 +49,8 @@ public static class Config
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId, // Returns identity scopes.
-                        IdentityServerConstants.StandardScopes.Profile // Returns profile scopes (ie familya names)
+                        IdentityServerConstants.StandardScopes.Profile, // Returns profile scopes (ie familya names)
+                        "roles"
                     },
 
                     // This is for client authentication. This allows the client application to execute an authenticate call to the token endpoint.

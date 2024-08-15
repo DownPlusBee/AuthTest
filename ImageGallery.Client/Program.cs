@@ -47,6 +47,13 @@ builder.Services.AddAuthentication(options =>
     options.ClaimActions.Remove("aud");  // This allows us to add, change, remove claim filters - OIDC Options removed some claims by default. This is to limit the size of the JWT. You can override these filters.
     options.ClaimActions.DeleteClaim("sid");
     options.ClaimActions.DeleteClaim("idp"); // https://github.com/dotnet/aspnetcore/blob/v8.0.1/src/Security/Authentication/OpenIdConnect/src/OpenIdConnectOptions.com
+    options.Scope.Add("roles");
+    options.ClaimActions.MapJsonKey("role", "role"); // have to create the map to allow custom claim to be used by the client
+    options.TokenValidationParameters = new() //contains configuration values on how the toke validation should happen, but it also allows us to specify the name claim and role claim types.
+    {
+        NameClaimType = "given_name",
+        RoleClaimType = "role"
+    };
 });
 
 var app = builder.Build();
