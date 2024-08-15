@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews()
     .AddJsonOptions(configure =>
         configure.JsonSerializerOptions.PropertyNamingPolicy = null);
+
+JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear(); // New JWT handler for .net 8
 
 // create an HttpClient used for accessing the API
 builder.Services.AddHttpClient("APIClient", client =>
@@ -40,7 +44,9 @@ builder.Services.AddAuthentication(options =>
     // options.SignedOutCallbackPath = "whateverstringyouwant";
     options.SaveTokens = true; // Allows middleware to save tokens from the IDP so they can be used inside the client.
     options.GetClaimsFromUserInfoEndpoint = true; // Allows us to get additional claims from the UserInfoendpoint.
-
+    options.ClaimActions.Remove("aud");  // This allows us to add, change, remove claim filters - OIDC Options removed some claims by default. This is to limit the size of the JWT. You can override these filters.
+    options.ClaimActions.DeleteClaim("sid");
+    options.ClaimActions.DeleteClaim("idp"); // https://github.com/dotnet/aspnetcore/blob/v8.0.1/src/Security/Authentication/OpenIdConnect/src/OpenIdConnectOptions.com
 });
 
 var app = builder.Build();
